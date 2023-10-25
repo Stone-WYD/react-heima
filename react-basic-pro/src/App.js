@@ -85,6 +85,32 @@ const App = () => {
       setCommentList(_.orderBy(commentList, 'ctime', 'desc'))
     }
   }
+
+  // 发布评论功能
+  // 1. 绑定表单
+  const [content, setContent] = useState('')
+  // 2. 点击发布按钮发布评论
+  const submitContent = () => {
+    let newCommentList = [
+      ...commentList,
+    {
+      "rpid": 100,
+      "user": {
+        "uid": "30009257",
+        "avatar": avatar,
+        "uname": "黑马前端"
+      },
+      "content": content,
+      "ctime": "12-19 09: 00",
+      "like": 123
+    }
+    ]
+    if (type === 'hot') {
+      setCommentList(_.orderBy(newCommentList, 'like', 'desc'))
+    } else if (type === 'time') {
+      setCommentList(_.orderBy(newCommentList, 'ctime', 'desc'))
+    }
+  }
   return (
     <div className="app">
       {/* 导航 Tab */}
@@ -121,9 +147,11 @@ const App = () => {
             <textarea
               className="reply-box-textarea"
               placeholder="发一条友善的评论"
+              value={content}
+              onChange={(e)=>{setContent(e.target.value)}}
             />
             {/* 发布按钮 */}
-            <div className="reply-box-send">
+            <div className="reply-box-send" onClick={submitContent} >
               <div className="send-text">发布</div>
             </div>
           </div>
