@@ -1,8 +1,10 @@
 import './App.scss'
 import avatar from './images/bozai.png'
-import { useState } from "react"
+import { useRef, useState } from "react"
 import _ from 'lodash'
 import classNames from 'classnames'
+import { v4 as uuidv4 } from 'uuid'
+import dayjs from 'dayjs'
 
 
 // 评论列表假数据
@@ -89,19 +91,20 @@ const App = () => {
   // 发布评论功能
   // 1. 绑定表单
   const [content, setContent] = useState('')
+  const inputRef = useRef(null)
   // 2. 点击发布按钮发布评论
   const submitContent = () => {
     let newCommentList = [
       ...commentList,
     {
-      "rpid": 100,
+      "rpid": uuidv4(), // 随机id
       "user": {
         "uid": "30009257",
         "avatar": avatar,
         "uname": "黑马前端"
       },
       "content": content,
-      "ctime": "12-19 09: 00",
+      "ctime": dayjs(new Date()).format('MM-DD hh:mm'), // 格式化 日期
       "like": 123
     }
     ]
@@ -110,6 +113,10 @@ const App = () => {
     } else if (type === 'time') {
       setCommentList(_.orderBy(newCommentList, 'ctime', 'desc'))
     }
+    // 1.清空输入框内容
+    setContent('')
+    // 2.聚焦 dom(useRef) - focus
+    inputRef.current.focus()
   }
   return (
     <div className="app">
@@ -148,6 +155,7 @@ const App = () => {
               className="reply-box-textarea"
               placeholder="发一条友善的评论"
               value={content}
+              ref={inputRef}
               onChange={(e)=>{setContent(e.target.value)}}
             />
             {/* 发布按钮 */}
